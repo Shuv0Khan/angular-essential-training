@@ -1,4 +1,7 @@
 import { Injectable } from "@angular/core";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { catchError, map } from 'rxjs/operators';
+import { throwError } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -49,19 +52,43 @@ export class MediaItemService {
     }
   ];
 
-  get() {
-    return this.mediaItems;
+  constructor(private http: HttpClient) {}
+
+  get(medium) {
+    const getOptions = {
+      params: {medium}
+    }
+    return this.http.get<MediaItemsResponse>('mediaitems', getOptions)
+      .pipe(map(response => {return response.mediaItems}),
+        catchError(this.handleError));
   }
 
   add(mediaItem) {
-    this.mediaItems.push(mediaItem);
-    console.dir(this.mediaItems);
+    return this.http.post('mediaitems', mediaItem)
+      .pipe(catchError(this.handleError));
   }
 
   delete(mediaItem) {
-    const index = this.mediaItems.indexOf(mediaItem);
-    if (index >= 0) {
-      this.mediaItems.splice(index, 1);
-    }
+    return this.http.delete(`mediaitems/${mediaItem.id}`)
+      .pipe(catchError(this.handleError));
   }
+
+  private handleError(error: HttpErrorResponse) {
+    console.log(error.message);
+    return throwError('A data error occured. Please try again.');
+  }
+}
+
+interface MediaItemsResponse {
+  mediaItems: MediaItem[];
+}
+
+export interface MediaItem {
+  id: number;
+  name: string;
+  medium: string;
+  category: string;
+  year: number;
+  watchedOn: number;
+  isFavorite: boolean;
 }
