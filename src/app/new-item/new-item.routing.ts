@@ -1,5 +1,5 @@
-import { RouterModule, Routes } from "@angular/router";
-import { MediaItemFormComponent } from "./media-item-form.component";
+import { Routes, RouterModule } from '@angular/router';
+import { MediaItemFormComponent } from './media-item-form.component';
 
 const newItemRoutes: Routes = [
   { path: '', component: MediaItemFormComponent }
