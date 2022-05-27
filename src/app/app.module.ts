@@ -31,11 +31,6 @@ import { CategoryListComponent } from './category-list.component';
   ],
   bootstrap: [
     AppComponent
-  ],
-  providers: [
-    {provide: lookupListToken, useValue: lookupList},
-    {provide: HttpXhrBackend, useClass: MockXHRBackend}
-  //   MediaItemService
   ]
 })
 export class AppModule {}
